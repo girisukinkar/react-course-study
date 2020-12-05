@@ -1,15 +1,15 @@
-import React, { useState , useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Todos from './components/Todos';
 
 const LOCAL_STORAGE_KEY = 'todoApp.todos';
-function App(){
+function App() {
 
-  const [todos, setTodos] =   useState([]);
+  const [todos, setTodos] = useState([]);
   const todoNameRef = useRef()
 
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY));
-    if(storedTodos){
+    if (storedTodos) {
       setTodos(storedTodos)
 
     }
@@ -20,7 +20,7 @@ function App(){
   }, [todos]);
 
 
-  function toggleTodo(id){
+  function toggleTodo(id) {
     const newTodos = [...todos];
     const todo = newTodos.find(todo => todo.id === id);
     todo.complete = !todo.complete
@@ -28,15 +28,15 @@ function App(){
   }
 
 
-  function handleAddTodo(e){
+  function handleAddTodo(e) {
 
     const name = todoNameRef.current.value;
-    if(name === ''){
+    if (name === '') {
       return
     }
 
     setTodos(prevTodos => {
-      return [...prevTodos, { id: Math.floor(Math.random() * 1000) + 1 , name : name , complete: false}]
+      return [...prevTodos, { id: Math.floor(Math.random() * 1000) + 1, name: name, complete: false }]
     })
 
 
@@ -44,13 +44,22 @@ function App(){
     todoNameRef.current.value = null;
 
   }
+
+
+  function clearCompletedTodos(){
+
+    const newTodos = todos.filter(todo => !todo.complete);
+    setTodos(newTodos);
+  }
+
+
   return (
     <>
-    <Todos todos={todos} toggleTodo={toggleTodo} />
-    <input ref={todoNameRef} type="text" />
-    <button onClick={handleAddTodo}> Add Todo</button>  
-    <button> Clear Completed Todos</button>  
-    <div> { (todos.filter(todo => !todo.complete).length) } left todo</div>  
+      <Todos todos={todos} toggleTodo={toggleTodo} />
+      <input ref={todoNameRef} type="text" />
+      <button onClick={handleAddTodo}> Add Todo</button>
+      <button onClick={clearCompletedTodos}> Clear Completed Todos</button>
+      <div> {(todos.filter(todo => !todo.complete).length)} left todo</div>
     </>
   )
 }
